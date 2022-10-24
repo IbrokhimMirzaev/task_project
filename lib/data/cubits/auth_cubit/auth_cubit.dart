@@ -45,7 +45,6 @@ class AuthCubit extends Cubit<AuthState> {
   User get user => fireAuth.currentUser!;
 
   Stream<User?> authState() async* {
-    print("================ ${FirebaseAuth.instance.authStateChanges().toString()}");
     yield* FirebaseAuth.instance.authStateChanges();
   }
 }
