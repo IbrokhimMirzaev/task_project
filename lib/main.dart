@@ -27,8 +27,9 @@ class MyApp extends StatelessWidget {
         create: (context) => context.read<AuthCubit>().authState(),
         initialData: null,
         child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           theme: theme,
-          home: (context.watch<User?>() != null) ? const ChatPage() : const AuthPage()
+          home: (context.watch<User?>() == null) ? const ChatPage() : const AuthPage()
         ),
       ),
     );

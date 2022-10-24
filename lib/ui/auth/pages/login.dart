@@ -20,52 +20,59 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Login")),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 50),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 36),
-              child: TextFormField(
-                controller: emailController,
-                textInputAction: TextInputAction.next,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
+            child: TextFormField(
+              decoration: const InputDecoration(
+                hintText: "Email",
+              ),
+              controller: emailController,
+              textInputAction: TextInputAction.next,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
+            child: TextFormField(
+              decoration: const InputDecoration(
+                hintText: "Password",
+              ),
+              controller: passwordController,
+              obscureText: true,
+              textInputAction: TextInputAction.done,
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextButton(
+            onPressed: () {
+              context.read<AuthCubit>().signIn(
+                    email: emailController.text.trim(),
+                    password: passwordController.text.trim(),
+                    context: context,
+                  );
+            },
+            child: const Text(
+              "Sign in",
+              style: TextStyle(
+                fontSize: 30,
               ),
             ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 36),
-              child: TextFormField(
-                controller: passwordController,
-                obscureText: true,
-                textInputAction: TextInputAction.done,
+          ),
+          const SizedBox(height: 20),
+          TextButton(
+            onPressed: widget.onClickSignUp,
+            child: const Text(
+              "Sign Up",
+              style: TextStyle(
+                color: Colors.grey,
               ),
             ),
-            const SizedBox(height: 100),
-            TextButton(onPressed: signIn, child: Text("Sign in")),
-            const SizedBox(
-              height: 20,
-            ),
-            TextButton(
-              onPressed: widget.onClickSignUp,
-              child: const Text(
-                "Sign Up",
-                style: TextStyle(color: Colors.grey),
-              ),
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
-  }
-
-  Future<void> signIn() async {
-    context.read<AuthCubit>().signIn(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim(),
-          context: context,
-        );
   }
 
   @override

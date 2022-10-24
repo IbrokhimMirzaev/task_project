@@ -24,58 +24,59 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Register")),
-      body: SingleChildScrollView(
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 36),
-                child: TextFormField(
-                  controller: emailController,
-                  textInputAction: TextInputAction.next,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (email) =>
-                  email != null && !EmailValidator.validate(email) ? "Enter a valid email" : null,
-                  style: const TextStyle(fontSize: 17),
-                  // decoration: getInputDecoration(label: "Email"),
-                ),
+      body: Form(
+        key: formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 36),
+              child: TextFormField(
+                decoration: InputDecoration(hintText: "Email"),
+                controller: emailController,
+                textInputAction: TextInputAction.next,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (email) =>
+                email != null && !EmailValidator.validate(email) ? "Enter a valid email" : null,
+                style: const TextStyle(fontSize: 17),
+                // decoration: getInputDecoration(label: "Email"),
               ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 36),
-                child: TextFormField(
+            ),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 36),
+              child: TextFormField(
+                  decoration: InputDecoration(hintText: "Password"),
                   controller: passwordController,
                   textInputAction: TextInputAction.next,
                   obscureText: true,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (password) => password != null && password.length < 6 ? "Enter at least 6 charcter !" : null,
                   style: const TextStyle(fontSize: 17,)
-                  // decoration: getInputDecoration(label: "Password"),
-                ),
+                // decoration: getInputDecoration(label: "Password"),
               ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 36),
-                child: TextFormField(
-                  controller: confirmPasswordController,
-                  textInputAction: TextInputAction.done,
-                  obscureText: true,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (password) =>
-                  password != null && password.length < 6 ? "Enter at least 6 charcter !" : null,
-                ),
+            ),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 36),
+              child: TextFormField(
+                decoration: const InputDecoration(hintText: "Confirm Password"),
+                controller: confirmPasswordController,
+                textInputAction: TextInputAction.done,
+                obscureText: true,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (password) =>
+                password != null && password.length < 6 ? "Enter at least 6 charcter !" : null,
               ),
-              const SizedBox(height: 50),
-              TextButton(onPressed: signUp, child: const Text("Sign Up")),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: widget.onClickedSignIn,
-                child: const Text("Log in"),
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 50),
+            TextButton(onPressed: signUp, child: const Text("Sign Up", style: TextStyle(fontSize: 30))),
+            const SizedBox(height: 20),
+            TextButton(
+              onPressed: widget.onClickedSignIn,
+              child: const Text("Log in", style: TextStyle(color: Colors.grey)),
+            ),
+          ],
         ),
       ),
     );
