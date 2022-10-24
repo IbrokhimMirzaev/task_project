@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:task_project/data/cubits/auth_cubit/auth_cubit.dart';
 import 'package:task_project/ui/auth/pages/auth_page.dart';
 import 'package:task_project/ui/chat/chat.dart';
+import 'package:task_project/utils/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         create: (context) => context.read<AuthCubit>().authState(),
         initialData: null,
         child: MaterialApp(
+          theme: theme,
           home: (context.watch<User?>() != null) ? const ChatPage() : const AuthPage()
         ),
       ),
