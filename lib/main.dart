@@ -29,9 +29,27 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: theme,
-          home: (context.watch<User?>() == null) ? const ChatPage() : const AuthPage()
+          home: const MainPage(),
         ),
       ),
     );
+  }
+}
+
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
+
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  @override
+  Widget build(BuildContext context) {
+    final firebaseUser = context.watch<User?>();
+    if (firebaseUser != null) {
+      return const ChatPage();
+    }
+    return const AuthPage();
   }
 }
