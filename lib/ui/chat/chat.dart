@@ -11,9 +11,12 @@ class ChatPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Chat Page"),
         actions: [
-          IconButton(onPressed: (){
-            context.read<AuthCubit>().signOut(context);
-          }, icon: const Icon(Icons.logout))
+          IconButton(
+            onPressed: () {
+              context.read<AuthCubit>().signOut(context);
+            },
+            icon: const Icon(Icons.logout),
+          )
         ],
       ),
     );
