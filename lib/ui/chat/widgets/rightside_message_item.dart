@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:task_project/utils/colors.dart';
 import 'package:task_project/utils/my_utils.dart';
 
 class RightSideMessageItem extends StatelessWidget {
@@ -20,7 +21,7 @@ class RightSideMessageItem extends StatelessWidget {
             dateText,
             style: const TextStyle(
               fontSize: 12,
-              color: Color(0xFF888888),
+              color: MyColors.C_888888,
             ),
           ),
           const SizedBox(width: 10),
@@ -36,7 +37,7 @@ class RightSideMessageItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
       decoration: const BoxDecoration(
-        color: Color(0xFFF5B400),
+        color: MyColors.C_F5B400,
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(20),
           topLeft: Radius.circular(20),
