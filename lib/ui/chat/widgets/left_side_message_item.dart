@@ -20,7 +20,9 @@ class LeftSideMessageItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          // messageText.length > 25
+          messageText.length > 25
+              ? Expanded(child: getTextContainer(text: messageText))
+              : getTextContainer(text: messageText),
           const SizedBox(width: 10),
           Text(
             dateText,
@@ -30,6 +32,32 @@ class LeftSideMessageItem extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Container getTextContainer({required String text}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
+      decoration: const BoxDecoration(
+        color: Color(0xFFC4385F5),
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(20),
+          topLeft: Radius.circular(20),
+          bottomRight: Radius.circular(20),
+        ),
+      ),
+      child: Linkify(
+        style: const TextStyle(fontSize: 14, color: Colors.white),
+        linkStyle: const TextStyle(fontSize: 14, color: Colors.amber),
+        textAlign: TextAlign.left,
+        onOpen: (link) async {
+          var response = await MyUtils.onUrlOpen(link);
+          if (response == false) {
+            MyUtils.getUrlOpenFailToast();
+          }
+        },
+        text: text,
       ),
     );
   }
