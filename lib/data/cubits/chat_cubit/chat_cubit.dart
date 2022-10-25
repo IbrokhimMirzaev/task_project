@@ -22,11 +22,11 @@ class ChatCubit extends Cubit<ChatState> {
       debugPrint(e.message);
     }
   }
-  //
-  // Stream<List<MessageItem>> getMessages() =>
-  //     _fireStore.collection('messages').orderBy("created_at").snapshots().map(
-  //           (snapshot) => snapshot.docs
-  //           .map((doc) => MessageItem.fromJson(doc.data()))
-  //           .toList(),
-  //     );
+
+  Stream<List<MessageItem>> getMessages() =>
+      fireStore.collection('messages').orderBy("created_at").snapshots().map(
+            (snapshot) => snapshot.docs
+            .map((doc) => MessageItem.fromJson(doc.data()))
+            .toList(),
+      );
 }
