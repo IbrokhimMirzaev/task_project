@@ -18,6 +18,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController controller = TextEditingController();
+  final focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +28,15 @@ class _ChatPageState extends State<ChatPage> {
         title: const Text("Chat Page"),
         actions: [
           IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.people),
+          ),
+          IconButton(
             onPressed: () {
               context.read<AuthCubit>().signOut(context);
             },
             icon: const Icon(Icons.logout),
-          )
+          ),
         ],
       ),
       body: Column(
@@ -46,16 +51,18 @@ class _ChatPageState extends State<ChatPage> {
                   final messages = snapshot.data!;
                   return messages.isNotEmpty
                       ? ListView(
-                          physics: const BouncingScrollPhysics(),
+                          padding: const EdgeInsets.symmetric(vertical: 25),
                           children: List.generate(messages.length, (index) {
                             var message = messages[index];
                             return (message.uid == user!.uid)
                                 ? RightSideMessageItem(
-                                    dateText: DateFormat.Hm().format(message.createdAt),
+                                    dateText: DateFormat.Hm()
+                                        .format(message.createdAt),
                                     messageText: message.message,
                                   )
                                 : LeftSideMessageItem(
-                                    dateText: DateFormat.Hm().format(message.createdAt),
+                                    dateText: DateFormat.Hm()
+                                        .format(message.createdAt),
                                     messageText: message.message,
                                   );
                           }),
@@ -72,24 +79,29 @@ class _ChatPageState extends State<ChatPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(8),
                   child: TextField(
+                    onChanged: (v) {
+                      if (v.length <= 1) {
+                        setState(() {});
+                      }
+                    },
                     controller: controller,
+                    focusNode: focusNode,
                     decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: const BorderSide(
-                          width: 2,
-                          color: MyColors.C_0001FC,
-                        ),
+                            width: 2, color: MyColors.C_0001FC),
                       ),
                     ),
                   ),
                 ),
               ),
               IconButton(
-                onPressed: () async {
+                onPressed: () {
                   if (controller.text.isNotEmpty) {
-                    await context.read<ChatCubit>().sendMessage(
+                    context.read<ChatCubit>().sendMessage(
                           messageItem: MessageItem(
                             uid: user!.uid,
                             message: controller.text,
@@ -100,9 +112,13 @@ class _ChatPageState extends State<ChatPage> {
                         );
 
                     controller.clear();
+                    focusNode.unfocus();
                   }
                 },
-                icon: const Icon(Icons.send, color: Colors.blue),
+                icon: Icon(Icons.send,
+                    color: (controller.text.isNotEmpty)
+                        ? Colors.blue
+                        : Colors.grey),
               )
             ],
           )
