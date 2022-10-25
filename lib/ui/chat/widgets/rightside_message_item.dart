@@ -11,7 +11,7 @@ class RightSideMessageItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 7),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.end,

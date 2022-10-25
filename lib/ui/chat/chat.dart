@@ -56,8 +56,7 @@ class _ChatPageState extends State<ChatPage> {
                             var message = messages[index];
                             return (message.uid == user!.uid)
                                 ? RightSideMessageItem(
-                                    dateText: DateFormat.Hm()
-                                        .format(message.createdAt),
+                                    dateText: DateFormat.Hm().format(message.createdAt),
                                     messageText: message.message,
                                   )
                                 : LeftSideMessageItem(
@@ -87,8 +86,8 @@ class _ChatPageState extends State<ChatPage> {
                     controller: controller,
                     focusNode: focusNode,
                     decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                      hintText: "Type something...",
+                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: const BorderSide(
@@ -113,12 +112,13 @@ class _ChatPageState extends State<ChatPage> {
 
                     controller.clear();
                     focusNode.unfocus();
+                    setState(() {});
                   }
                 },
-                icon: Icon(Icons.send,
-                    color: (controller.text.isNotEmpty)
-                        ? Colors.blue
-                        : Colors.grey),
+                icon: Icon(
+                  Icons.send,
+                  color: (controller.text.isNotEmpty) ? Colors.blue : Colors.grey,
+                ),
               )
             ],
           )
