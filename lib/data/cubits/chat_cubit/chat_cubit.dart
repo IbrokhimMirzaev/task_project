@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:task_project/data/models/message_item.dart';
+import 'package:task_project/data/models/message_model/message_item.dart';
 
 part 'chat_state.dart';
 

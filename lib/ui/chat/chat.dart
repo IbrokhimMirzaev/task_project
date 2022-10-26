@@ -4,9 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:task_project/data/cubits/auth_cubit/auth_cubit.dart';
 import 'package:task_project/data/cubits/chat_cubit/chat_cubit.dart';
-import 'package:task_project/data/models/message_item.dart';
+import 'package:task_project/data/models/message_model/message_item.dart';
 import 'package:task_project/ui/chat/widgets/left_side_message_item.dart';
 import 'package:task_project/ui/chat/widgets/rightside_message_item.dart';
+import 'package:task_project/ui/users/user_page.dart';
 import 'package:task_project/utils/colors.dart';
 
 class ChatPage extends StatefulWidget {
@@ -28,7 +29,9 @@ class _ChatPageState extends State<ChatPage> {
         title: const Text("Chat Page"),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => UsersPage()));
+            },
             icon: const Icon(Icons.people),
           ),
           IconButton(
