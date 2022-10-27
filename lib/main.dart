@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:task_project/data/cubits/auth_cubit/auth_cubit.dart';
 import 'package:task_project/data/cubits/chat_cubit/chat_cubit.dart';
+import 'package:task_project/data/cubits/users_cubit/users_cubit.dart';
 import 'package:task_project/ui/auth/pages/auth_page.dart';
 import 'package:task_project/ui/chat/chat.dart';
 import 'package:task_project/utils/theme.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => AuthCubit(fireAuth: FirebaseAuth.instance)),
         BlocProvider(create: (context) => ChatCubit(fireStore: FirebaseFirestore.instance)),
+        BlocProvider(create: (context) => UserCubit(fireStore: FirebaseFirestore.instance)),
       ],
       child: StreamProvider(
         create: (context) => context.read<AuthCubit>().authState(),

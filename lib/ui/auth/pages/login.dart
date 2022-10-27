@@ -24,6 +24,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(height: 150),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
               child: TextFormField(
