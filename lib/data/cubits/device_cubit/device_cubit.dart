@@ -33,21 +33,20 @@ class UserCubit extends Cubit<DeviceState> {
     }
   }
 
-  Future<void> deleteUser({required String docId}) async {
+  Future<void> deleteDevice({required String docId}) async {
     try {
-      await fireStore.collection("users").doc(docId).delete();
+      await fireStore.collection("devices").doc(docId).delete();
     } on FirebaseException catch (e) {
       debugPrint(e.message);
     }
   }
 
-  Future<void> getAllUsers() async {
+  Future<void> getAllDevices() async {
     emit(state.copyWith(status: MyStatus.LOADING));
-    _subscription = fireStore.collection('users')
-        .orderBy("created_at").snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => UserItem.fromJson(doc.data())).toList())
+    _subscription = fireStore.collection('devices').orderBy("created_at").snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => DeviceItem.fromJson(doc.data())).toList())
         .listen((items) {
-      emit(state.copyWith(users: items, status: MyStatus.SUCCESS));
+      emit(state.copyWith(devices: items, status: MyStatus.SUCCESS));
     }, onError: (error) {
       emit(
         state.copyWith(status: MyStatus.ERROR, errorText: error.toString()),

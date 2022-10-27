@@ -8,13 +8,13 @@ class DeviceState extends Equatable {
   });
 
   final String errorText;
-  final List<UserItem> devices;
+  final List<DeviceItem> devices;
   final MyStatus status;
 
-  DeviceState copyWith({String? errorText, List<UserItem>? users, MyStatus? status}) {
+  DeviceState copyWith({String? errorText, List<DeviceItem>? devices, MyStatus? status}) {
     return DeviceState(
       errorText: errorText ?? this.errorText,
-      devices: users ?? this.devices,
+      devices: devices ?? this.devices,
       status: status ?? this.status,
     );
   }
