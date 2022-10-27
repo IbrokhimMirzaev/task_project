@@ -4,9 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:task_project/data/cubits/auth_cubit/auth_cubit.dart';
 import 'package:task_project/data/cubits/chat_cubit/chat_cubit.dart';
+import 'package:task_project/data/cubits/users_cubit/users_cubit.dart';
 import 'package:task_project/data/models/message_model/message_item.dart';
+import 'package:task_project/data/models/my_status/my_status.dart';
+import 'package:task_project/data/models/user_model/user_item.dart';
 import 'package:task_project/ui/chat/widgets/left_side_message_item.dart';
 import 'package:task_project/ui/chat/widgets/rightside_message_item.dart';
+import 'package:task_project/ui/devices/devices_page.dart';
 import 'package:task_project/ui/users/user_page.dart';
 import 'package:task_project/utils/colors.dart';
 
@@ -20,6 +24,19 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController controller = TextEditingController();
   final focusNode = FocusNode();
+
+  @override
+  void initState() {
+    BlocProvider.of<ChatCubit>(context).getMessages();
+    _init();
+    super.initState();
+  }
+
+  void _init() async {
+    User? currentUser = FirebaseAuth.instance.currentUser!;
+    var myUser = UserItem(id: currentUser.uid, status: false, createdAt: DateTime.now());
+    await BlocProvider.of<UserCubit>(context).addUser(user: myUser);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +53,12 @@ class _ChatPageState extends State<ChatPage> {
           ),
           IconButton(
             onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => DevicesPage()));
+            },
+            icon: const Icon(Icons.devices),
+          ),
+          IconButton(
+            onPressed: () {
               context.read<AuthCubit>().signOut(context);
             },
             icon: const Icon(Icons.logout),
@@ -44,37 +67,38 @@ class _ChatPageState extends State<ChatPage> {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: StreamBuilder<List<MessageItem>>(
-              stream: context.read<ChatCubit>().getMessages(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Center(child: Text(snapshot.error.toString()));
-                } else if (snapshot.hasData) {
-                  final messages = snapshot.data!;
-                  return messages.isNotEmpty
-                      ? ListView(
-                          padding: const EdgeInsets.symmetric(vertical: 25),
-                          children: List.generate(messages.length, (index) {
-                            var message = messages[index];
-                            return (message.uid == user!.uid)
-                                ? RightSideMessageItem(
-                                    dateText: DateFormat.Hm().format(message.createdAt),
-                                    messageText: message.message,
-                                  )
-                                : LeftSideMessageItem(
-                                    dateText: DateFormat.Hm()
-                                        .format(message.createdAt),
-                                    messageText: message.message,
-                                  );
-                          }),
-                        )
-                      : const Center(child: Text("List Empty"));
-                }
-                return const Center(child: CircularProgressIndicator());
-              },
-            ),
-          ),
+          BlocBuilder<ChatCubit, ChatState>(builder: (context, state) {
+            var st = state.status;
+
+            if (st == MyStatus.LOADING) {
+              return const Expanded(child: Center(child: CircularProgressIndicator()));
+            } else if (st == MyStatus.SUCCESS) {
+              var messages = state.messages;
+              return messages.isNotEmpty
+                  ? Expanded(
+                    child: ListView(
+                        padding: const EdgeInsets.symmetric(vertical: 25),
+                        children: List.generate(messages.length, (index) {
+                          var message = messages[index];
+                          return (message.uid == user!.uid)
+                              ? RightSideMessageItem(
+                                  dateText: DateFormat.Hm().format(message.createdAt),
+                                  messageText: message.message,
+                                )
+                              : LeftSideMessageItem(
+                                  dateText: DateFormat.Hm().format(message.createdAt),
+                                  messageText: message.message,
+                                );
+                        }),
+                      ),
+                  )
+                  : const Expanded(child: Center(child: Text("List Empty")));
+            }
+            else if (st == MyStatus.ERROR){
+              return Expanded(child: Center(child: Text(state.errorText)));
+            }
+            return const SizedBox();
+          }),
           Row(
             children: [
               Expanded(
@@ -90,7 +114,8 @@ class _ChatPageState extends State<ChatPage> {
                     focusNode: focusNode,
                     decoration: InputDecoration(
                       hintText: "Type something...",
-                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: const BorderSide(
@@ -120,7 +145,8 @@ class _ChatPageState extends State<ChatPage> {
                 },
                 icon: Icon(
                   Icons.send,
-                  color: (controller.text.isNotEmpty) ? Colors.blue : Colors.grey,
+                  color:
+                      (controller.text.isNotEmpty) ? Colors.blue : Colors.grey,
                 ),
               )
             ],
