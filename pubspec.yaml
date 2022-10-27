@@ -17,6 +17,7 @@ dependencies:
   email_validator: '^2.1.16'
   fluttertoast: ^8.0.9
   json_serializable: ^6.3.1
+  device_info_plus: ^8.0.0
   modal_bottom_sheet: ^2.0.1
   flutter_linkify: ^5.0.2
   url_launcher: ^6.1.4
