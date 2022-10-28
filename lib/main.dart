@@ -4,9 +4,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:task_project/data/api/device_info.dart';
 import 'package:task_project/data/cubits/auth_cubit/auth_cubit.dart';
 import 'package:task_project/data/cubits/chat_cubit/chat_cubit.dart';
+import 'package:task_project/data/cubits/device_cubit/device_cubit.dart';
 import 'package:task_project/data/cubits/users_cubit/users_cubit.dart';
+import 'package:task_project/data/models/device_model/device_item.dart';
 import 'package:task_project/ui/auth/pages/auth_page.dart';
 import 'package:task_project/ui/chat/chat.dart';
 import 'package:task_project/utils/theme.dart';
@@ -22,11 +25,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final firebaseAuth = FirebaseAuth.instance;
+    final fireStore = FirebaseFirestore.instance;
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => AuthCubit(fireAuth: FirebaseAuth.instance)),
-        BlocProvider(create: (context) => ChatCubit(fireStore: FirebaseFirestore.instance)),
-        BlocProvider(create: (context) => UserCubit(fireStore: FirebaseFirestore.instance)),
+        BlocProvider(create: (context) => AuthCubit(fireAuth: firebaseAuth)),
+        BlocProvider(create: (context) => ChatCubit(fireStore: fireStore)),
+        BlocProvider(create: (context) => UserCubit(fireStore: fireStore)),
+        BlocProvider(create: (context) => UserCubit(fireStore: fireStore)),
+        BlocProvider(
+          create: (context) => DeviceCubit(fireStore: fireStore)
+        ),
       ],
       child: StreamProvider(
         create: (context) => context.read<AuthCubit>().authState(),
@@ -34,27 +43,23 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: theme,
-          home: const MainPage(),
+          home: MainPage(),
         ),
       ),
     );
   }
 }
 
-class MainPage extends StatefulWidget {
+class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
 
-  @override
-  State<MainPage> createState() => _MainPageState();
-}
-
-class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User?>();
     if (firebaseUser != null) {
-      return const ChatPage();
+      return ChatPage();
     }
-    return const AuthPage();
+
+    return AuthPage();
   }
 }

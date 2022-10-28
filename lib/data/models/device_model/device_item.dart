@@ -7,6 +7,9 @@ class DeviceItem {
   @JsonKey(defaultValue: "", name: "id")
   String id;
 
+  @JsonKey(defaultValue: "", name: "uid")
+  String uid;
+
   @JsonKey(defaultValue: "", name: "name")
   String name;
 
@@ -17,6 +20,7 @@ class DeviceItem {
     required this.id,
     required this.name,
     required this.createdAt,
+    required this.uid,
   });
 
   factory DeviceItem.fromJson(Map<String, dynamic> json) => _$DeviceItemFromJson(json);

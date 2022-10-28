@@ -1,7 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:task_project/data/cubits/auth_cubit/auth_cubit.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key, required this.onClickSignUp}) : super(key: key);
@@ -38,9 +39,7 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
               child: TextFormField(
-                decoration: const InputDecoration(
-                  hintText: "Password",
-                ),
+                decoration: const InputDecoration(hintText: "Password"),
                 controller: passwordController,
                 obscureText: true,
                 textInputAction: TextInputAction.done,
@@ -48,13 +47,13 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 20),
             TextButton(
-              onPressed: () {
-                context.read<AuthCubit>().signIn(
+              onPressed: () async {
+                await context.read<AuthCubit>().signIn(
                       email: emailController.text.trim(),
                       password: passwordController.text.trim(),
                       context: context,
                     );
-              },
+                },
               child: const Text(
                 "Sign in",
                 style: TextStyle(

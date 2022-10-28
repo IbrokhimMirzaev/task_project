@@ -26,8 +26,7 @@ class UserCubit extends Cubit<UserState> {
     required UserItem user,
   }) async {
     try {
-      var newUser = await fireStore.collection("users").add(user.toJson());
-      await fireStore.collection("users").doc(newUser.id).update({"id": newUser.id});
+      var newUser = await fireStore.collection("users").doc(user.id).set(user.toJson());
     } on FirebaseException catch (e) {
       debugPrint(e.message);
     }

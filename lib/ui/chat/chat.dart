@@ -2,9 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:task_project/data/api/device_info.dart';
 import 'package:task_project/data/cubits/auth_cubit/auth_cubit.dart';
 import 'package:task_project/data/cubits/chat_cubit/chat_cubit.dart';
+import 'package:task_project/data/cubits/device_cubit/device_cubit.dart';
 import 'package:task_project/data/cubits/users_cubit/users_cubit.dart';
+import 'package:task_project/data/models/device_model/device_item.dart';
 import 'package:task_project/data/models/message_model/message_item.dart';
 import 'package:task_project/data/models/my_status/my_status.dart';
 import 'package:task_project/data/models/user_model/user_item.dart';
@@ -24,6 +27,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController controller = TextEditingController();
   final focusNode = FocusNode();
+  String deviceName = '';
 
   @override
   void initState() {
@@ -33,9 +37,15 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _init() async {
-    User? currentUser = FirebaseAuth.instance.currentUser!;
-    var myUser = UserItem(id: currentUser.uid, status: false, createdAt: DateTime.now());
-    await BlocProvider.of<UserCubit>(context).addUser(user: myUser);
+    deviceName = await DeviceInfoApi.getPhoneInfo();
+    await BlocProvider.of<DeviceCubit>(context).addDevice(
+      device: DeviceItem(
+        id: '',
+        name: deviceName,
+        createdAt: DateTime.now(),
+        uid: FirebaseAuth.instance.currentUser!.uid,
+      ),
+    );
   }
 
   @override
@@ -47,13 +57,15 @@ class _ChatPageState extends State<ChatPage> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => UsersPage()));
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => UsersPage()));
             },
             icon: const Icon(Icons.people),
           ),
           IconButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => DevicesPage()));
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => DevicesPage()));
             },
             icon: const Icon(Icons.devices),
           ),
@@ -67,34 +79,55 @@ class _ChatPageState extends State<ChatPage> {
       ),
       body: Column(
         children: [
+          StreamBuilder(
+            stream: BlocProvider.of<DeviceCubit>(context)
+                .getUserStreamDevices(uid: user!.uid),
+            builder: (context, state) {
+              if (state.hasData) {
+                var data = state.data!;
+                List<String> devices = data.map((e) => e.name).toList();
+
+                print("LENGTH ========== ${devices.length}");
+
+                print("DEVICE NAME ====== $deviceName");
+
+                if (!devices.contains(deviceName)) {
+                  BlocProvider.of<AuthCubit>(context).signOut(context);
+                }
+              }
+              return const SizedBox();
+            },
+          ),
           BlocBuilder<ChatCubit, ChatState>(builder: (context, state) {
             var st = state.status;
 
             if (st == MyStatus.LOADING) {
-              return const Expanded(child: Center(child: CircularProgressIndicator()));
+              return const Expanded(
+                  child: Center(child: CircularProgressIndicator()));
             } else if (st == MyStatus.SUCCESS) {
               var messages = state.messages;
               return messages.isNotEmpty
                   ? Expanded(
-                    child: ListView(
+                      child: ListView(
                         padding: const EdgeInsets.symmetric(vertical: 25),
                         children: List.generate(messages.length, (index) {
                           var message = messages[index];
                           return (message.uid == user!.uid)
                               ? RightSideMessageItem(
-                                  dateText: DateFormat.Hm().format(message.createdAt),
+                                  dateText:
+                                      DateFormat.Hm().format(message.createdAt),
                                   messageText: message.message,
                                 )
                               : LeftSideMessageItem(
-                                  dateText: DateFormat.Hm().format(message.createdAt),
+                                  dateText:
+                                      DateFormat.Hm().format(message.createdAt),
                                   messageText: message.message,
                                 );
                         }),
                       ),
-                  )
+                    )
                   : const Expanded(child: Center(child: Text("List Empty")));
-            }
-            else if (st == MyStatus.ERROR){
+            } else if (st == MyStatus.ERROR) {
               return Expanded(child: Center(child: Text(state.errorText)));
             }
             return const SizedBox();

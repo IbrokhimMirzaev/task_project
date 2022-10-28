@@ -8,6 +8,7 @@ part of 'device_item.dart';
 
 DeviceItem _$DeviceItemFromJson(Map<String, dynamic> json) => DeviceItem(
       id: json['id'] as String? ?? '',
+      uid: json['uid'] as String? ?? '',
       name: json['name'] as String? ?? '',
       createdAt: DateTime.parse(json['created_at'] as String),
     );
@@ -15,6 +16,7 @@ DeviceItem _$DeviceItemFromJson(Map<String, dynamic> json) => DeviceItem(
 Map<String, dynamic> _$DeviceItemToJson(DeviceItem instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'uid': instance.uid,
       'name': instance.name,
       'created_at': instance.createdAt.toIso8601String(),
     };

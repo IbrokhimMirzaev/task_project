@@ -10,7 +10,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   final FirebaseAuth fireAuth;
 
-  void signUp({required String email, required String password, required BuildContext context}) async {
+  Future<void> signUp({required String email, required String password, required BuildContext context}) async {
     try {
       await fireAuth.createUserWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e){
@@ -18,7 +18,7 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  void signIn({required String email, required String password, required BuildContext context}) async {
+  Future<void> signIn({required String email, required String password, required BuildContext context}) async {
     try {
       await fireAuth.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
