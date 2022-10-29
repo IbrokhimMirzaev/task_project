@@ -13,17 +13,18 @@ class DevicesPage extends StatefulWidget {
 class _DevicesPageState extends State<DevicesPage> {
   @override
   Widget build(BuildContext context) {
-    var user = context.watch<User?>();
+    User? user = context.watch<User?>();
+    if (user == null){
+      Navigator.pop(context);
+    }
     return Scaffold(
       appBar: AppBar(title: const Text("Devices"), centerTitle: true),
       body: StreamBuilder(
         stream: BlocProvider.of<DeviceCubit>(context).getUserStreamDevices(uid: user!.uid),
         builder: (context, state) {
           if (state.hasData) {
-            var data = state.data!;
-            var devices = state.data!;
-            return devices.isNotEmpty
-                ? ListView(
+            var devices = state.data;
+            return devices!.isNotEmpty ? ListView(
               padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 25),
               children: List.generate(devices.length, (index) {
                 var device = devices[index];

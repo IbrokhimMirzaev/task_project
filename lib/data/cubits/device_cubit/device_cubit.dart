@@ -52,9 +52,7 @@ class DeviceCubit extends Cubit<DeviceState> {
           .where("uid", isEqualTo: uid)
           .snapshots()
           .map(
-            (snapshot) => snapshot.docs
-                .map((doc) => DeviceItem.fromJson(doc.data()))
-                .toList(),
+            (snapshot) => snapshot.docs.map((doc) => DeviceItem.fromJson(doc.data())).toList(),
           );
 
   @override

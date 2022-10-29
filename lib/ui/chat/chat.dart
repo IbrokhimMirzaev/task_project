@@ -57,15 +57,13 @@ class _ChatPageState extends State<ChatPage> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => UsersPage()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => UsersPage()));
             },
             icon: const Icon(Icons.people),
           ),
           IconButton(
             onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => DevicesPage()));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => DevicesPage()));
             },
             icon: const Icon(Icons.devices),
           ),
@@ -80,16 +78,11 @@ class _ChatPageState extends State<ChatPage> {
       body: Column(
         children: [
           StreamBuilder(
-            stream: BlocProvider.of<DeviceCubit>(context)
-                .getUserStreamDevices(uid: user!.uid),
+            stream: BlocProvider.of<DeviceCubit>(context).getUserStreamDevices(uid: user!.uid),
             builder: (context, state) {
               if (state.hasData) {
                 var data = state.data!;
                 List<String> devices = data.map((e) => e.name).toList();
-
-                print("LENGTH ========== ${devices.length}");
-
-                print("DEVICE NAME ====== $deviceName");
 
                 if (!devices.contains(deviceName)) {
                   BlocProvider.of<AuthCubit>(context).signOut(context);
@@ -112,15 +105,13 @@ class _ChatPageState extends State<ChatPage> {
                         padding: const EdgeInsets.symmetric(vertical: 25),
                         children: List.generate(messages.length, (index) {
                           var message = messages[index];
-                          return (message.uid == user!.uid)
+                          return (message.uid == user.uid)
                               ? RightSideMessageItem(
-                                  dateText:
-                                      DateFormat.Hm().format(message.createdAt),
+                                  dateText: DateFormat.Hm().format(message.createdAt),
                                   messageText: message.message,
                                 )
                               : LeftSideMessageItem(
-                                  dateText:
-                                      DateFormat.Hm().format(message.createdAt),
+                                  dateText: DateFormat.Hm().format(message.createdAt),
                                   messageText: message.message,
                                 );
                         }),
@@ -163,7 +154,7 @@ class _ChatPageState extends State<ChatPage> {
                   if (controller.text.isNotEmpty) {
                     context.read<ChatCubit>().sendMessage(
                           messageItem: MessageItem(
-                            uid: user!.uid,
+                            uid: user.uid,
                             message: controller.text,
                             createdAt: DateTime.now(),
                             messageId: "",
