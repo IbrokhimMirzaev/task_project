@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -40,8 +39,9 @@ class _UsersPageState extends State<UsersPage> {
                     var user = users[index];
                     return ListTile(
                       onTap: () {},
-                      title: Text("ID   ==   ${user.id}"),
-                      trailing: Text(user.status.toString()),
+                      leading: Icon(Icons.person, size: 40),
+                      title: Text(user.id),
+                      // trailing: Text(user.status.toString()),
                       subtitle: Text(DateFormat.Hm().format(user.createdAt)),
                     );
                   }),
